@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Temporal Pathway Visualization</title>
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Temporal Pathway Visualization</h1>
+      <div class="row">
+        <div class="col-md-2">
+          <h4>Load data</h4>
+          <div class="form-group">
+            <label for="selectNetwork">Network</label>
+            <select class="form-control" id="selectNetwork" onchange="networkChanged()">
+              <option>network.csv</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="selectTimeSeries">Time series</label>
+            <select class="form-control" id="selectTimeSeries" onchange="timeSeriesChanged()">
+              <option>timeseries.csv</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="selectActivity">Activity</label>
+            <select class="form-control" id="selectActivity" onchange="activityChanged()">
+              <option>activity.csv</option>
+            </select>
+          </div>
+          <h4>Find a node</h4>
+          <div id="nodeSelector">
+            <input class="typeahead" type="text" placeholder="Node name">
+          </div>
+          <h4>Graph layout</h4>
+          <div class="form-group">
+            <label 
+              for="chargeslider" 
+              id="chargeslider-label">Charge</label>
+            <input id="chargeSlider" type="range" name="points" min="-1000" max="0" value="-1000" class="form-control">
+          </div>
+          <div class="form-group">
+            <label 
+              for="linkDistSlider" 
+              id="linkDistSlider-label">Link distance</label>
+            <input id="linkDistSlider" type="range" name="points" min="20" max="500" value="20" class="form-control">
+          </div>
+        </div>
+        <div class="col-md-10">
+          <h4>Network</h4>
+          <div id="network"></div>
+          <h4>Time series</h4>
+          <div id="timeSeries"</div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="bower_components/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script type="text/javascript" src="bower_components/d3/d3.js"></script>
+    <script type="text/javascript" src="bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+  </body>
+</html>
