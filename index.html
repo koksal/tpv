@@ -30,6 +30,12 @@
               <option>activity.csv</option>
             </select>
           </div>
+          <div class="form-group">
+            <label for="selectPeptideMap">Peptide map</label>
+            <select class="form-control" id="selectPeptideMap" onchange="peptideMapChanged()">
+              <option>peptideMap.csv</option>
+            </select>
+          </div>
           <h4>Find a node</h4>
           <div id="nodeSelector">
             <input class="typeahead" type="text" placeholder="Node name">

@@ -168,9 +168,6 @@ var loadTimeSeries,
         })
       }
 
-      // brushing via activity range selection
-
-
       var selected = !prots.every(function (prot) {
         return !protIsSelected(prot);
       });
