@@ -1,12 +1,3 @@
-var loadNetwork,
-    updateNetwork,
-    networkResponse,
-    protIsSelected,
-    protIsHovered,
-    clearNodeBrushing,
-    markNodeBrushing,
-    zoomToNode;
-
 (function() {
   var width   = $("#network").width(),
       height  = $("#network").height();
@@ -64,23 +55,23 @@ var loadNetwork,
     redraw();
   })
 
-  protIsSelected = function (id) {
+  function protIsSelected(id) {
     var n = nodeByName(id);
     var noneSelected = nodes.every(function (n) { return !n.selected; });
     var noneHovered = nodes.every(function (n) { return !n.hovered});
     return (noneSelected && noneHovered) || (n && n.selected);
   }
 
-  protIsHovered = function (id) {
+  function protIsHovered(id) {
     var n = nodeByName(id);
     return (n && n.hovered);
   }
 
-  clearNodeBrushing = function () {
+  function clearNodeBrushing() {
     nodes.forEach(function (n) { n.brushed = false; });
   }
 
-  markNodeBrushing = function (id) {
+  function markNodeBrushing(id) {
     var n = nodeByName(id);
     if (n) {
       n.brushed = true;
@@ -194,34 +185,11 @@ var loadNetwork,
         .append("svg:text")
     text.exit().remove();
 
-
     updateGraphCoordinates();
-
-    updateNetwork();
   }
 
-  updateNetwork = function () {
-    // update link and node properties with specific solution
-    //
-    var key = networkQueryKey()
-    var solution = networkResponse.networks[key];
-    var solutionLinks = solution.links
-    var prizes = solution.prizes
-
-    links.forEach(function (l) {
-      var sl = linkByName(solutionLinks, l.source.name, l.target.name);
-      if (typeof sl != 'undefined') {
-        l.lra = sl.lra;
-        l.lri = sl.lri;
-        l.rla = sl.rla;
-        l.rli = sl.rli;
-      } else {
-        l.lra = false;
-        l.lri = false;
-        l.rla = false;
-        l.rli = false;
-      }
-    });
+  function drawNetwork() {
+    var prizes = {};
 
     nodes.forEach(function (n) {
       n.prize = prizes[n.name] || 0;
@@ -310,27 +278,27 @@ var loadNetwork,
   }
 
   function lrOnlyAct(l) {
-    return l.lra === "true" && l.lri !== "true";
+    return l.lra && !l.lri;
   }
 
   function lrOnlyInh(l) {
-    return l.lri === "true" && l.lra !== "true";
+    return l.lri && !l.lra;
   }
 
   function lrActInh(l) {
-    return l.lra === "true" && l.lri === "true";
+    return l.lra && l.lri;
   }
 
   function rlOnlyAct(l) {
-    return l.rla === "true" && l.rli !== "true";
+    return l.rla && !l.rli;
   }
 
   function rlOnlyInh(l) {
-    return l.rli === "true" && l.rla !== "true";
+    return l.rli && !l.rla;
   }
 
   function rlActInh(l) {
-    return l.rla === "true" && l.rli === "true";
+    return l.rla && l.rli;
   }
 
   function updateGraphCoordinates() {
@@ -346,59 +314,31 @@ var loadNetwork,
   function nodeClicked(n) {
     n.selected = !n.selected;
     d3.select(this).classed("selected", n.selected);
-    highlightProfiles();
+    tpv.timeSeriesVisualizer.highlightProfiles();
   }
 
   function nodeMouseOver(n) {
     n.hovered = true;
     d3.select(this).classed("hovered", true);
-    highlightProfiles();
+    tpv.timeSeriesVisualizer.highlightProfiles();
   }
 
   function nodeMouseOut(n) {
     n.hovered = false;
     d3.select(this).classed("hovered", false);
-    highlightProfiles();
+    tpv.timeSeriesVisualizer.highlightProfiles();
   }
 
-  function linkClicked(l) {
-  }
+  function linkClicked(l) { }
 
-  function linkMouseOver(l) {
-  }
+  function linkMouseOver(l) { }
 
-  function linkMouseOut(l) {
-  }
+  function linkMouseOut(l) { }
 
   // Note: to use if anchor positions are eventually needed
   function dragend(d) {
     // d.fixed = !d.fixed;
     // d3.select(this).classed("fixed", d.fixed);
-  }
-
-  // when updated, incrementally add or remove elements from cached graph.
-  function updateGraph() {
-    updateNodes();
-    updateLinks();
-    redraw();
-  }
-
-  function updateNodes() {
-    nodes = [];
-    networkResponse.union.vertices.forEach(function (d) {
-      nodes.push({name: d});
-    });
-  }
-
-  function updateLinks(ls) {
-    links = [];
-    var edges = networkResponse.union.edges
-
-    edges.forEach(function (l) {
-      var source = nodeByName(l.source);
-      var target = nodeByName(l.target);
-      links.push({source: source, target: target});
-    });
   }
 
   function sourceTargetPair(l) {
@@ -410,7 +350,7 @@ var loadNetwork,
     var res = false;
     for (var i = 0; i < 3; i = i + 1) {
       for (var j = i + 1; j < 4; j = j + 1) {
-        if (values[i] === "true" && values[j] === "true") {
+        if (values[i] && values[j]) {
           res = true;
         }
       }
@@ -423,11 +363,11 @@ var loadNetwork,
   }
 
   function activatingLink(l) {
-    return l.lra === "true" || l.rla === "true";
+    return l.lra || l.rla;
   }
 
   function inhibitingLink(l) {
-    return l.lri === "true" || l.rli === "true";
+    return l.lri || l.rli;
   }
 
   function inactiveLink(l) {
@@ -435,10 +375,10 @@ var loadNetwork,
   }
 
   function linkInSolution(l) {
-    return l.lra === "true" || 
-           l.lri === "true" || 
-           l.rla === "true" || 
-           l.rli === "true";
+    return l.lra || 
+           l.lri || 
+           l.rla || 
+           l.rli;
   }
 
   function inactiveNode(n) {
@@ -478,7 +418,7 @@ var loadNetwork,
         + " scale(" + scale + ")");
   }
 
-  zoomToNode = function (name) {
+  function zoomToNode(name) {
     var node = nodeByName(name);
     zoomToCoord(node.x, node.y);
   }
@@ -493,7 +433,43 @@ var loadNetwork,
     svg.transition().duration(750).call(zoom.translate(newTrans).event);
   }
 
-  loadNetwork = function() {
-    updateGraph();
+  function createNodes(vertices) {
+    nodes = [];
+    vertices.forEach(function (d) {
+      nodes.push({name: d});
+    });
+  }
+
+  function createLinks(edges) {
+    links = [];
+    edges.forEach(function (l) {
+      var source = nodeByName(l.source);
+      var target = nodeByName(l.target);
+      links.push({
+        source: source, 
+        target: target,
+        lra: l.lra,
+        lri: l.lri,
+        rla: l.rla,
+        rli: l.rli
+      });
+    });
+  }
+
+  function loadNetwork(network) {
+    createNodes(network.vertices);
+    createLinks(network.edges);
+    redraw();
+    drawNetwork();
+  }
+
+  tpv.networkVisualizer = {
+    loadNetwork: loadNetwork,
+    drawNetwork: drawNetwork,
+    protIsSelected: protIsSelected,
+    protIsHovered: protIsHovered,
+    clearNodeBrushing: clearNodeBrushing,
+    markNodeBrushing: markNodeBrushing,
+    zoomToNode: zoomToNode
   }
 })();

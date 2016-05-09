@@ -10,32 +10,54 @@
     <div class="container">
       <h1>Temporal Pathway Visualization</h1>
       <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-3">
           <h4>Load data</h4>
           <div class="form-group">
-            <label for="selectNetwork">Network</label>
-            <select class="form-control" id="selectNetwork" onchange="networkChanged()">
-              <option>network.csv</option>
-            </select>
+            <label>Network</label>
+            <div class="input-group">
+              <span class="input-group-btn">
+                <span class="btn btn-primary btn-file">
+                  Browse&hellip; <input type="file" id="networkInput">
+                </span>
+              </span>
+              <input type="text" class="form-control" id="networkInputLabel" readonly>
+            </div>
           </div>
           <div class="form-group">
-            <label for="selectTimeSeries">Time series</label>
-            <select class="form-control" id="selectTimeSeries" onchange="timeSeriesChanged()">
-              <option>timeseries.csv</option>
-            </select>
+            <label>Time series</label>
+            <div class="input-group">
+              <span class="input-group-btn">
+                <span class="btn btn-primary btn-file">
+                  Browse&hellip; <input type="file" id="timeSeriesInput">
+                </span>
+              </span>
+              <input type="text" class="form-control" id="timeSeriesInputLabel" readonly>
+            </div>
           </div>
           <div class="form-group">
-            <label for="selectActivity">Activity</label>
-            <select class="form-control" id="selectActivity" onchange="activityChanged()">
-              <option>activity.csv</option>
-            </select>
+            <label>Activity intervals</label>
+            <div class="input-group">
+              <span class="input-group-btn">
+                <span class="btn btn-primary btn-file">
+                  Browse&hellip; <input type="file" id="actIntInput">
+                </span>
+              </span>
+              <input type="text" class="form-control" id="actIntInputLabel" readonly>
+            </div>
           </div>
           <div class="form-group">
-            <label for="selectPeptideMap">Peptide map</label>
-            <select class="form-control" id="selectPeptideMap" onchange="peptideMapChanged()">
-              <option>peptideMap.csv</option>
-            </select>
+            <label>Profile-node mapping</label>
+            <div class="input-group">
+              <span class="input-group-btn">
+                <span class="btn btn-primary btn-file">
+                  Browse&hellip; <input type="file" id="profileNodeMapInput">
+                </span>
+              </span>
+              <input type="text" class="form-control" id="profileNodeMapInputLabel" readonly>
+            </div>
           </div>
+
+          <button type="button" class="btn btn-primary" id="visButton">Visualize</button>
           <h4>Find a node</h4>
           <div id="nodeSelector">
             <input class="typeahead" type="text" placeholder="Node name">
@@ -54,7 +76,7 @@
             <input id="linkDistSlider" type="range" name="points" min="20" max="500" value="20" class="form-control">
           </div>
         </div>
-        <div class="col-md-10">
+        <div class="col-md-9">
           <h4>Network</h4>
           <div id="network"></div>
           <h4>Time series</h4>
@@ -67,5 +89,7 @@
     <script type="text/javascript" src="bower_components/d3/d3.js"></script>
     <script type="text/javascript" src="bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/graphVisualizer.js"></script>
+    <script type="text/javascript" src="js/timeSeriesVisualizer.js"></script>
   </body>
 </html>

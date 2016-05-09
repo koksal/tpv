@@ -1,9 +1,3 @@
-var loadTimeSeries,
-    timeSeriesResponse,
-    profileNodeMap,
-    highlightProfiles,
-    noneBrushed;
-
 (function () {
   var divWidth   = $("#timeSeries").width(),
       divHeight  = $("#timeSeries").height();
@@ -23,7 +17,7 @@ var loadTimeSeries,
 
   var labels;
 
-  loadTimeSeries = function() {
+  function loadTimeSeries() {
     var ts = timeSeriesResponse[networkQueryKey()];
 
     d3.select("#timeSeries svg").remove();
@@ -138,7 +132,7 @@ var loadTimeSeries,
     highlightProfiles();
   }
 
-  noneBrushed = function() {
+  function noneBrushed() {
     var noTimeSeriesBrushed = activeLabels().length == 0;
     return noTimeSeriesBrushed;
   }
@@ -147,7 +141,7 @@ var loadTimeSeries,
     return labels.filter(function(l) { return !y[l].brush.empty(); });
   }
 
-  highlightProfiles = function () {
+  function highlightProfiles() {
     var actives = activeLabels(),
         extents = actives.map(function(l) { return y[l].brush.extent();});
 
@@ -176,7 +170,7 @@ var loadTimeSeries,
       });
       return !(brushed && (selected || hovered));
     });
-    updateNetwork();
+    drawNetwork();
   }
 
   function profilePath(d) {
@@ -212,5 +206,10 @@ var loadTimeSeries,
       return {x1: x1, x2: x2, y1: y1, y2: y2, a: p.act[i], i: p.inh[i]};
     })
   }
-  
+
+  tpv.timeSeriesVisualizer = {
+    loadTimeSeries: loadTimeSeries,
+    highlightProfiles: highlightProfiles,
+    noneBrushed: noneBrushed
+  }
 })();
