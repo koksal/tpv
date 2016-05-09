@@ -214,7 +214,6 @@
   }
 
   function segments(p) {
-    console.log(p.id);
     var ais = tpv.allowedIntervals[p.id];
     function canBeAct(i) {
       if (ais) {

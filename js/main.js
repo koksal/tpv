@@ -9,35 +9,12 @@ $(document).ready(function() {
   setUpUploader('profileNodeMapInput', 'profileNodeMapInputLabel', parseMapping)
 
   $('#visButton').click(visualizeData);
-
-  // We get four files:
-  //   - network
-  //   - time series
-  //   - (optional) activity
-  //   - (optional) mapping
-  //   - (optional) prizes
-
-  // We need to visualize two components:
-  //   - network
-  //     - input: 
-  //       - network file
-  //       - (optional) prizes file // or prizes computed from time series file
-  //   - time series
-  //     - input:
-  //       - time series file
-  //       - activity file
-  //       - profile-node map
-
-  // Create functions for parsing each into JS objects.
-  // Call d3.csv sequentially to fill these objects.
-  // Call graphVis with network object
-  // Call tsVis with ts, activity, map objects
-
 })
 
 function visualizeData() {
   tpv.networkVisualizer.loadNetwork(tpv.network);
   tpv.timeSeriesVisualizer.loadTimeSeries(tpv.timeSeries, tpv.profileNodeMap);
+  setUpNodeSearch(tpv.network.vertices, tpv.networkVisualizer.zoomToNode)
 }
 
 function parseNetwork(d) {
