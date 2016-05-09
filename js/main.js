@@ -37,6 +37,7 @@ $(document).ready(function() {
 
 function visualizeData() {
   tpv.networkVisualizer.loadNetwork(tpv.network);
+  tpv.timeSeriesVisualizer.loadTimeSeries(tpv.timeSeries, tpv.profileNodeMap);
 }
 
 function parseNetwork(d) {
@@ -107,11 +108,11 @@ function parseTimeSeries(d) {
   var firstHeader = header.shift();
   var labels = header;
 
-  var profiles = {};
+  var profiles = [];
   rows.forEach(function (row) {
     var id = row.shift();
-    var values = row;
-    profiles[id] = values;
+    var values = row.map(parseFloat);
+    profiles.push({id: id, values: values});
   });
   tpv.timeSeries = {
     labels: labels,
@@ -136,11 +137,11 @@ function parseAllowedIntervals(d) {
 function parseMapping(d) {
   // multiple mapped values are separated by a pipe character.
   var data = d3.tsv.parse(d);
-  tpv.profileNodeMapping = {};
+  tpv.profileNodeMap = {};
   data.forEach(function (d) {
     var pep = d["peptide"];
     var prots = (d["protein(s)"]).split("|");
-    tpv.profileNodeMapping[pep] = prots;
+    tpv.profileNodeMap[pep] = prots;
   })
 
   console.log("Parsed name mapping.")

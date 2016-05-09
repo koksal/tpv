@@ -17,9 +17,7 @@
 
   var labels;
 
-  function loadTimeSeries() {
-    var ts = timeSeriesResponse[networkQueryKey()];
-
+  function loadTimeSeries(ts, map) {
     d3.select("#timeSeries svg").remove();
 
     var svg = d3.select("#timeSeries").append("svg")
@@ -28,9 +26,10 @@
       .append("svg:g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    labels = ts.profiles.labels;
-    profiles = ts.profiles.profiles;
-    profileNodeMap = ts.profileNodeMap;
+    labels = ts.labels;
+    profiles = ts.profiles;
+    profiles = profiles.map(normalizeProfile);
+    profileNodeMap = map;
 
     x = d3.scale.ordinal().domain(labels).rangePoints([0, width]);
 
@@ -48,19 +47,20 @@
           .on("brush", profilesBrushed);
     });
 
+    // TODO fix
     // compute first activation interval, -1 if none
-    profiles.forEach(function (p) {
-      var firstActivityItvl = -1
-      for (var i = 0; i < p.act.length; i++) {
-        if (p.act[i] || p.inh[i]) {
-          // only update once
-          if (firstActivityItvl == -1) {
-            firstActivityItvl = i;
-          }
-        }
-      }
-      p.firstActive = firstActivityItvl;
-    })
+    // profiles.forEach(function (p) {
+    //   var firstActivityItvl = -1
+    //   for (var i = 0; i < p.act.length; i++) {
+    //     if (p.act[i] || p.inh[i]) {
+    //       // only update once
+    //       if (firstActivityItvl == -1) {
+    //         firstActivityItvl = i;
+    //       }
+    //     }
+    //   }
+    //   p.firstActive = firstActivityItvl;
+    // })
 
     // Add foreground lines.
     foreground = svg.append("svg:g")
@@ -128,6 +128,31 @@
     highlightProfiles();
   };
 
+  function normalizeProfile(p) {
+    var [min, max] = d3.extent(p.values);
+    var diff = max - min;
+    var normValues = p.values.map(function (v) {
+      if (diff == 0) {
+        return 0;
+      } else {
+        var n = (v - min) / diff;
+        if (n < 0 || n > 1) {
+          console.log("Values: " + p.values)
+          console.log("Max: " + max)
+          console.log("Min: " + min)
+          console.log("Diff: " + diff)
+          console.log("Value: " + v);
+          console.log("Norm: " + n);
+        }
+        return n;
+      }
+    });
+    return {
+      id: p.id,
+      values: normValues
+    }
+  }
+
   function profilesBrushed() {
     highlightProfiles();
   }
@@ -146,7 +171,7 @@
         extents = actives.map(function(l) { return y[l].brush.extent();});
 
     // node brushing will be updated
-    clearNodeBrushing();
+    tpv.networkVisualizer.clearNodeBrushing();
 
     foreground.classed("faded", function(d) {
       var brushed = actives.every(function (p, i) {
@@ -158,19 +183,19 @@
       // brush corresponding nodes in graph
       if (brushed) {
         prots.forEach(function (p) {
-          markNodeBrushing(p)
+          tpv.networkVisualizer.markNodeBrushing(p)
         })
       }
 
       var selected = !prots.every(function (prot) {
-        return !protIsSelected(prot);
+        return !tpv.networkVisualizer.protIsSelected(prot);
       });
       var hovered = !prots.every(function (prot) {
-        return !protIsHovered(prot);
+        return !tpv.networkVisualizer.protIsHovered(prot);
       });
       return !(brushed && (selected || hovered));
     });
-    drawNetwork();
+    tpv.networkVisualizer.drawNetwork();
   }
 
   function profilePath(d) {
@@ -197,13 +222,14 @@
     return line([[p.x1, p.y1], [p.x2, p.y2]]);  
   }
 
+  // TODO fix
   function segments(p) {
     return p.values.slice(1).map(function (d, i) {
       var x1 = x(labels[i]),
           x2 = x(labels[i+1]),
           y1 = y[labels[i]](p.values[i]),
           y2 = y[labels[i+1]](p.values[i+1]);
-      return {x1: x1, x2: x2, y1: y1, y2: y2, a: p.act[i], i: p.inh[i]};
+      return {x1: x1, x2: x2, y1: y1, y2: y2, a: true, i: false};
     })
   }
 

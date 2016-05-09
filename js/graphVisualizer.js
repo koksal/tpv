@@ -382,11 +382,11 @@
   }
 
   function inactiveNode(n) {
-    return !nodeInSolution(n) // || (!n.brushed && !noneBrushed());
+    return !nodeInSolution(n) // || (!n.brushed && !tpv.timeSeriesVisualizer.noneBrushed());
   }
 
   function brushedNode(n) {
-    return n.brushed && !noneBrushed();
+    return n.brushed && !tpv.timeSeriesVisualizer.noneBrushed();
   }
 
   function nodeInSolution(n) {
