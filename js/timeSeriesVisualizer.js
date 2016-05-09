@@ -135,16 +135,7 @@
       if (diff == 0) {
         return 0;
       } else {
-        var n = (v - min) / diff;
-        if (n < 0 || n > 1) {
-          console.log("Values: " + p.values)
-          console.log("Max: " + max)
-          console.log("Min: " + min)
-          console.log("Diff: " + diff)
-          console.log("Value: " + v);
-          console.log("Norm: " + n);
-        }
-        return n;
+        return (v - min) / diff;
       }
     });
     return {
@@ -222,14 +213,29 @@
     return line([[p.x1, p.y1], [p.x2, p.y2]]);  
   }
 
-  // TODO fix
   function segments(p) {
+    console.log(p.id);
+    var ais = tpv.allowedIntervals[p.id];
+    function canBeAct(i) {
+      if (ais) {
+        var s = ais[i + 1]
+        return s == "ambiguous" || s == "activation"
+      }
+      return false;
+    }
+    function canBeInh(i) {
+      if (ais) {
+        var s = ais[i + 1]
+        return s == "ambiguous" || s == "inhibition"
+      }
+      return false;
+    }
     return p.values.slice(1).map(function (d, i) {
       var x1 = x(labels[i]),
           x2 = x(labels[i+1]),
           y1 = y[labels[i]](p.values[i]),
           y2 = y[labels[i+1]](p.values[i+1]);
-      return {x1: x1, x2: x2, y1: y1, y2: y2, a: true, i: false};
+      return {x1: x1, x2: x2, y1: y1, y2: y2, a: canBeAct(i), i: canBeInh(i)};
     })
   }
 
