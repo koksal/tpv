@@ -214,20 +214,25 @@
   }
 
   function segments(p) {
-    var ais = tpv.allowedIntervals[p.id];
+    var ais = tpv.allowedIntervals;
+    if (ais) {
+      var pais = ais[p.id];
+    } else {
+      var pais = null;
+    }
     function canBeAct(i) {
-      if (ais) {
-        var s = ais[i + 1]
+      if (pais) {
+        var s = pais[i + 1]
         return s == "ambiguous" || s == "activation"
       }
-      return false;
+      return true;
     }
     function canBeInh(i) {
-      if (ais) {
-        var s = ais[i + 1]
+      if (pais) {
+        var s = pais[i + 1]
         return s == "ambiguous" || s == "inhibition"
       }
-      return false;
+      return true;
     }
     return p.values.slice(1).map(function (d, i) {
       var x1 = x(labels[i]),
