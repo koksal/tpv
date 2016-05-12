@@ -90,7 +90,7 @@
 
     function profileMouseMove(p) {
       focus.attr("transform", "translate(" + d3.mouse(this)[0] + "," + d3.mouse(this)[1] + ")");
-      focus.select("text").text(profileNodeMap[p.id]);
+      focus.select("text").text(profileNodes(p));
     }
 
     var focus = svg.append("g")
@@ -157,6 +157,12 @@
     return labels.filter(function(l) { return !y[l].brush.empty(); });
   }
 
+  function profileNodes(p) {
+    if (profileNodeMap) {
+      return profileNodeMap[p.id];
+    }
+    return [p.id];
+  }
   function highlightProfiles() {
     var actives = activeLabels(),
         extents = actives.map(function(l) { return y[l].brush.extent();});
@@ -169,7 +175,7 @@
         var value = d.values[labels.indexOf(p)];
         return extents[i][0] <= value && value <= extents[i][1];
       });
-      var prots = profileNodeMap[d.id];
+      var prots = profileNodes(d);
 
       // brush corresponding nodes in graph
       if (brushed) {
