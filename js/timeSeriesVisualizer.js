@@ -14,22 +14,35 @@
       axis = d3.svg.axis().orient("left"),
       foreground;
 
-
   var labels;
 
+  $(window).resize(function () {
+    divWidth   = $("#timeSeries").width();
+    divHeight  = $("#timeSeries").height();
+
+    width = divWidth - margin.left - margin.right;
+    height = divHeight - margin.top - margin.bottom;
+
+    redraw();
+  });
+
   function loadTimeSeries(ts, map) {
-    d3.select("#timeSeries svg").remove();
-
-    var svg = d3.select("#timeSeries").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-      .append("svg:g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
     labels = ts.labels;
     profiles = ts.profiles;
     profiles = profiles.map(normalizeProfile);
     profileNodeMap = map;
+    redraw();
+  }
+
+  function redraw() {
+    d3.select("#timeSeries svg").remove();
+
+    var svg = d3.select("#timeSeries").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom);
+
+    var svgG = svg.append("svg:g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     x = d3.scale.ordinal().domain(labels).rangePoints([0, width]);
 
@@ -63,7 +76,7 @@
     // })
 
     // Add foreground lines.
-    foreground = svg.append("svg:g")
+    foreground = svgG.append("svg:g")
         .attr("class", "foreground")
       .selectAll("path")
         .data(profiles)
@@ -93,7 +106,7 @@
       focus.select("text").text(profileNodes(p));
     }
 
-    var focus = svg.append("g")
+    var focus = svgG.append("g")
       .attr("class", "focus")
       .style("display", "none");
 
@@ -102,7 +115,7 @@
       .attr("dy", ".35em");
 
     // Add a group element for each label.
-    var g = svg.selectAll(".label")
+    var g = svgG.selectAll(".label")
         .data(labels)
       .enter().append("svg:g")
         .attr("class", "label")

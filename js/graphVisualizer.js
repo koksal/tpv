@@ -26,12 +26,13 @@
   var svg = d3.select("#network").append("svg")
       .attr("width", width)
       .attr("height", height)
-      .call(zoom)
-      .append("g");
+      .call(zoom);
 
-  var link = svg.selectAll(".link"),
-      node = svg.selectAll(".node"),
-      text = svg.selectAll(".nodelabel");
+  var svgG = svg.append("g");
+
+  var link = svgG.selectAll(".link"),
+      node = svgG.selectAll(".node"),
+      text = svgG.selectAll(".nodelabel");
 
   var links = [],
       nodes = [];
@@ -54,6 +55,24 @@
     force.linkDistance($(this).val());
     redraw();
   })
+
+  $(window).resize(function () {
+    width   = $("#network").width();
+    height  = $("#network").height();
+
+    force.size([width, height]);
+
+    x.domain([0, width])
+     .range([0, width]);
+
+    y.domain([0, height])
+     .range([0, height]);
+
+    svg.attr("width", width)
+       .attr("height", height);
+
+    redraw();
+  });
 
   function protIsSelected(id) {
     var n = nodeByName(id);
@@ -83,7 +102,7 @@
                 .range(["white", "blue"]);
 
   // define arrow markers for graph links
-  svg.append('svg:defs').append('svg:marker')
+  svgG.append('svg:defs').append('svg:marker')
       .attr('id', 'activating-end-arrow')
       .attr('viewBox', '0 -5 10 10')
       .attr('refX', 6)
@@ -94,7 +113,7 @@
       .attr('d', 'M0,-5L10,0L0,5')
       .attr('fill', activatingColor);
 
-  svg.append('svg:defs').append('svg:marker')
+  svgG.append('svg:defs').append('svg:marker')
       .attr('id', 'activating-start-arrow')
       .attr('viewBox', '0 -5 10 10')
       .attr('refX', 4)
@@ -105,7 +124,7 @@
       .attr('d', 'M10,-5L0,0L10,5')
       .attr('fill', activatingColor);
 
-  svg.append('svg:defs').append('svg:marker')
+  svgG.append('svg:defs').append('svg:marker')
       .attr('id', 'inhibiting-end-arrow')
       .attr('viewBox', '0 -5 10 10')
       .attr('refX', 1)
@@ -116,7 +135,7 @@
       .attr('d', 'M0,-5L5,-5L5,5L0,5')
       .attr('fill', inhibitingColor);
 
-  svg.append('svg:defs').append('svg:marker')
+  svgG.append('svg:defs').append('svg:marker')
       .attr('id', 'inhibiting-start-arrow')
       .attr('viewBox', '0 -5 10 10')
       .attr('refX', 9)
@@ -127,7 +146,7 @@
       .attr('d', 'M10,-5L5,-5L5,5L10,5')
       .attr('fill', inhibitingColor);
 
-  svg.append('svg:defs').append('svg:marker')
+  svgG.append('svg:defs').append('svg:marker')
       .attr('id', 'ambig-end-arrow')
       .attr('viewBox', '0 -5 10 10')
       .attr('refX', 7)
@@ -140,7 +159,7 @@
       .attr('r', 5)
       .attr('fill', ambigColor);
 
-  svg.append('svg:defs').append('svg:marker')
+  svgG.append('svg:defs').append('svg:marker')
       .attr('id', 'ambig-start-arrow')
       .attr('viewBox', '0 -5 10 10')
       .attr('refX', 2)
@@ -413,7 +432,7 @@
     trans=d3.event.translate;
     scale=d3.event.scale;
 
-    svg.attr("transform",
+    svgG.attr("transform",
         "translate(" + trans + ")"
         + " scale(" + scale + ")");
   }
@@ -430,7 +449,7 @@
     var shiftX = width / 2;
     var shiftY = height / 2;
     var newTrans = [trans[0] - x(nx) + shiftX, trans[1] - y(ny) + shiftY];
-    svg.transition().duration(750).call(zoom.translate(newTrans).event);
+    svgG.transition().duration(750).call(zoom.translate(newTrans).event);
   }
 
   function createNodes(vertices) {

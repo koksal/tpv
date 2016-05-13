@@ -99,13 +99,11 @@ input[readonly] {
 }
 
 #network {
-  width: 945px;
   height: 500px;
   border: 1px solid #DEDEDE;
 }
 
 #timeSeries {
-  width: 945px;
   height: 500px;
   border: 1px solid #DEDEDE;
 }
