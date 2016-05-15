@@ -15,8 +15,9 @@
       foreground;
 
   var labels;
+  var profiles;
 
-  $(window).resize(function () {
+  function resize() {
     divWidth   = $("#timeSeries").width();
     divHeight  = $("#timeSeries").height();
 
@@ -24,13 +25,16 @@
     height = divHeight - margin.top - margin.bottom;
 
     redraw();
-  });
+  }
 
   function loadTimeSeries(ts, map) {
     labels = ts.labels;
     profiles = ts.profiles;
     profiles = profiles.map(normalizeProfile);
     profileNodeMap = map;
+
+    $(window).resize(resize);
+
     redraw();
   }
 
