@@ -248,14 +248,14 @@
         var s = pais[i + 1]
         return s == "ambiguous" || s == "activation"
       }
-      return true;
+      return false;
     }
     function canBeInh(i) {
       if (pais) {
         var s = pais[i + 1]
         return s == "ambiguous" || s == "inhibition"
       }
-      return true;
+      return false;
     }
     return p.values.slice(1).map(function (d, i) {
       var x1 = x(labels[i]),
