@@ -1,12 +1,16 @@
 {
   "name": "tpv",
-  "version": "0.0.0",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "version": "0.1.0",
+  "description": "Temporal Pathway Visualizer",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/koksal/tpv.git"
   },
   "devDependencies": {
     "gulp": "~3.9.1",
     "gulp-gh-pages": "^0.5.4",
     "browser-sync": "~2.12.8"
-  }
+  },
+  "author": "Ali Sinan Koksal <alisinan@gmail.com>",
+  "license": "MIT"
 }

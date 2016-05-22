@@ -8,20 +8,21 @@
 
 TPV is an in-browser visualization tool to explore network and time series data. It is mainly designed to work with in conjunction with [TPS].
 
-# Usage
+## Usage
 
 TPV can be used [at this page][TPV].
 
-# Installation
+## Installation
 
-## Dependencies
+### Dependencies
 
 [npm], [bower], and [gulp.js].
 
-## Build instructions
+### Build instructions
 
 1. Install project dependencies:
-    npm install
-    bower install
+
+        npm install
+        bower install
 
 2. Building the project properly with gulp.js is work in progress.
