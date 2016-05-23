@@ -14,7 +14,8 @@
     "babelify": "~7.3.0",
     "vinyl-source-stream": "~1.1.0",
     "lodash": "~4.12.0",
-    "del": "~2.2.0"
+    "del": "~2.2.0",
+    "watchify": "~3.7.0"
   },
   "author": "Ali Sinan Koksal <alisinan@gmail.com>",
   "license": "MIT"
