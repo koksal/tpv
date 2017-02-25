@@ -8,6 +8,8 @@
 
 TPV is an in-browser visualization tool to explore network and time series data. It is mainly designed to work with in conjunction with [TPS].
 
+![TPV screenshot](media/screenshot.png)
+
 ## Usage
 
 TPV can be used [at this page][TPV].
